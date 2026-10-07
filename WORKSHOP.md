@@ -58,6 +58,8 @@ Enabled plugins can contribute additional project templates. Reopen focus mode t
 
 ## Build custom GUI applications
 
+<img width="960" height="697" alt="image" src="https://github.com/user-attachments/assets/ded2ea8e-da50-4060-a45b-8e2722ca8baf" />
+
 Six additional **GUI / Advanced / …** applications combine real tool processes, recipe editing, terminal output, shared results, model previews and pipeline visualization. See [Starter tools and projects](STARTER_TOOLS.md). Standalone example files are in `examples/advanced_workshop/`.
 
 Choose **Workshop → New → GUI / …** for a complete runnable application. Runnable starters also appear in **Insert boilerplate** and in focus mode. Start with **GUI / Blank custom application** for an independent window with your own layout. Add only the components you need; the toolkit supplies the shared style, not the operations application.
@@ -287,8 +289,6 @@ Settings now includes Runtime, Display, Ambient, Marquee, Editors, Models, Conso
 
 
 ### Executable branding and advanced options
-
-<img width="960" height="697" alt="image" src="https://github.com/user-attachments/assets/ded2ea8e-da50-4060-a45b-8e2722ca8baf" />
 
 Workshop's **Build EXE** dialog includes an icon picker and collapsible branding/packaging controls. ICO, PNG, JPEG, WebP and BMP icons become a transparent multi-resolution Windows icon (16–256 pixels). The icon is embedded in the executable and applied to GUI windows using the shared toolkit.
 
