@@ -58,19 +58,28 @@ The backup at `backups/loadout-menu.assets-backup.py` includes its own helper an
 ## Navigation and execution
 
 - **Lobby:** select a saved project and execution loadout, deploy, inspect activity, or stop all operations.
-- <img width="1903" height="1066" alt="image" src="https://github.com/user-attachments/assets/44bfde3c-17e6-4ad6-a2a7-124d1a53caa3" />
+  <img width="1903" height="1066" alt="image" src="https://github.com/user-attachments/assets/44bfde3c-17e6-4ad6-a2a7-124d1a53caa3" />
 - **Loadouts:** save interpreter paths, environment JSON, and timeouts. Zero disables the timeout. Edit shared JSON values available to every operator.
-- <img width="1905" height="1069" alt="image" src="https://github.com/user-attachments/assets/e8f96acd-0636-4023-8579-8fcf683f3b94" />
-
+  <img width="1905" height="1069" alt="image" src="https://github.com/user-attachments/assets/e8f96acd-0636-4023-8579-8fcf683f3b94" />
 - **Operators:** save callsigns paired with projects and execution loadouts. Deploy them independently.
+  <img width="1900" height="1061" alt="image" src="https://github.com/user-attachments/assets/8ce99662-7304-43d8-8f85-8f881af97e2d" />
 - **Maps:** edit, visualize, validate, and deploy dependency graphs. Independent nodes run concurrently up to the configured limit. Failed/cancelled dependencies skip downstream nodes. Only one map runs at a time; manual projects can also occupy execution slots.
+  <img width="1900" height="1060" alt="image" src="https://github.com/user-attachments/assets/a229802b-1738-4063-b7d3-9d62a154b200" />
 - **Missions:** schedule saved maps at recurring intervals while the app is open. Busy runners defer a mission; missed intervals are not replayed. Stop-all disables recurring missions.
+  <img width="1896" height="1062" alt="image" src="https://github.com/user-attachments/assets/f3afedee-2d73-4b74-b4bd-86a8221295c0" />
 - **Arsenal:** select project cards, import a Python entry script, or export/import bundles.
+  <img width="1905" height="1063" alt="image" src="https://github.com/user-attachments/assets/197bb3c3-b242-4686-98ad-54df3370618a" />
 - **Workshop:** create tools from templates, edit highlighted Python with line numbers and automatic indentation, set JSON arguments and working directories, save, and run. Imported scripts are copied; adjacent modules/resources are not copied automatically. Use a working directory containing required resources and imports.
+  <img width="1911" height="1069" alt="image" src="https://github.com/user-attachments/assets/0b38223f-121e-4a98-96fd-54e50e50715a" />
 - **Console:** render ANSI colors, tables, gradients, and cursor-based progress output. Select an isolated run or a grouped view of all runs, freeze the display, customize fonts/output themes/styles, stop selected jobs, and export readable output.
+  <img width="1906" height="842" alt="image" src="https://github.com/user-attachments/assets/70578259-8d38-4769-9105-990f856f1981" />
 - **Barracks:** inspect persisted run status, duration, exit codes, and logs.
+  <img width="1908" height="1069" alt="image" src="https://github.com/user-attachments/assets/1824ecac-21aa-43a2-8351-0bb81bffe384" />
 - **Assets/Settings:** customize artwork, concurrent process limits, motion, and optional Ollama assistance.
+  <img width="1909" height="1064" alt="image" src="https://github.com/user-attachments/assets/390a080c-6d67-4942-bf08-30805c60c4df" />
+  <img width="1918" height="1079" alt="image" src="https://github.com/user-attachments/assets/8bf1b0f9-1dcb-46cc-b080-ec1e814c2c76" />
 - **Plugins:** rescan local extensions, explicitly enable/disable them, or create a scaffold. The bundled Output Tools example starts disabled.
+  <img width="1911" height="1074" alt="image" src="https://github.com/user-attachments/assets/62dc67f5-e96a-49df-add8-d8c7f81591ec" />
 
 ## Dynamic assignment and workflow builder
 
