@@ -59,7 +59,7 @@ The backup at `backups/loadout-menu.assets-backup.py` includes its own helper an
 ## Navigation and execution
 
 - **Lobby:** select a saved project and execution loadout, deploy, inspect activity, or stop all operations.
-  <img width="1904" height="1053" alt="image" src="https://github.com/user-attachments/assets/62162173-7eb5-475a-b8fc-5304b0f007ac" />
+  <img width="1897" height="1050" alt="image" src="https://github.com/user-attachments/assets/eaff0769-40f8-46f3-a61f-ba1f33f9a500" />
 - **Loadouts:** save interpreter paths, environment JSON, and timeouts. Zero disables the timeout. Edit shared JSON values available to every operator.
   <img width="1905" height="1069" alt="image" src="https://github.com/user-attachments/assets/e8f96acd-0636-4023-8579-8fcf683f3b94" />
 - **Operators:** save callsigns paired with projects and execution loadouts. Deploy them independently.
