@@ -1,4 +1,4 @@
-<img width="559" height="559" alt="pixil-frame-0 (12)" src="https://github.com/user-attachments/assets/daea753a-f6af-43d6-bb30-8bb5cdde061d" /> 
+# <img width="559" height="559" alt="pixil-frame-0 (12)" src="https://github.com/user-attachments/assets/daea753a-f6af-43d6-bb30-8bb5cdde061d" /> 
 # Pylerium local operations
 
 Detailed authoring guides: [Workshop and terminal](WORKSHOP.md) · [Plugin builder and API](PLUGINS.md) · [Windows executable](BUILD.md)
