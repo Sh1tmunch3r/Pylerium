@@ -136,7 +136,7 @@ Bundles include entry scripts, execution profiles, operators, maps, and shared v
 Each run retains the most recent 2 MB of output; the live console retains 10,000 text blocks. Scripts execute with normal account permissions, not in a security sandbox. Stop and timeout controls kill the directly launched Python process; descendants spawned by a script require their own cleanup. The UI must remain open for missions to run.
 
 ## Optional Ollama
-<img width="349" height="816" alt="image" src="https://github.com/user-attachments/assets/bdc89fe9-f617-44d0-a1ae-711c5e54a1ae" />
+<img width="1298" height="296" alt="image" src="https://github.com/user-attachments/assets/1bfc4be8-f0dd-4483-9b17-78747b355438" /><img width="349" height="816" alt="image" src="https://github.com/user-attachments/assets/bdc89fe9-f617-44d0-a1ae-711c5e54a1ae" />
 
 AI is **off by default**. Enable it in Settings and enter a dynamic HTTP(S) endpoint. The downloaded-model selector loads from [`GET /api/tags`](https://docs.ollama.com/api/tags); choose a model and save. Discovery is asynchronous with a 10-second timeout and never downloads models. Re-enable assistance or use Refresh Downloaded Models after changing servers/models.
 
