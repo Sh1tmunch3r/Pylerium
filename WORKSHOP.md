@@ -299,7 +299,7 @@ Running `build_exe.py` directly opens the icon picker before building Pylerium. 
 
 ## Killchain global command bar
 
-<img width="880" height="649" alt="image" src="https://github.com/user-attachments/assets/5489c1ce-7261-4e99-b8f7-6d246d7a107d" />
+<img width="864" height="618" alt="image" src="https://github.com/user-attachments/assets/1e2f2d10-6511-4b52-add9-84d96024244e" />
 
 While Pylerium is running, Ctrl+Space opens the floating command bar over Windows, including when the main window is minimized. The header button also opens it. If another application owns Ctrl+Space, the overlay reports the conflict; the header button remains available. Closing Pylerium releases the hotkey and stops clipboard capture.
 
