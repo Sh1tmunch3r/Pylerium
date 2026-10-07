@@ -1,0 +1,6 @@
+PyQt6>=6.7,<7
+Pillow>=10
+numpy>=1.26
+trimesh>=4
+moderngl>=5.10
+glcontext>=2.5

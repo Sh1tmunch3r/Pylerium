@@ -1,0 +1,7 @@
+{
+  "id": "starter_guide",
+  "name": "Getting Started",
+  "description": "Host-integrated getting started",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "jumpback",
+  "name": "Jumpback / Activity Archive",
+  "description": "Persistent searchable PC activity, browser and YouTube visits, app sessions, notes, bookmarks and exports. Local capture with pause and exclusions.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

@@ -1,0 +1,7 @@
+{
+  "id": "starter_file_integrity",
+  "name": "File Integrity / Starter Tools",
+  "description": "Stream SHA-256 fingerprints and compare expected checksums.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

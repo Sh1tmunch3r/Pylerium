@@ -1,0 +1,7 @@
+{
+  "id": "new_extension",
+  "name": "Project Launcher",
+  "description": "Project launcher",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

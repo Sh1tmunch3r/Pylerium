@@ -1,0 +1,7 @@
+{
+  "id": "starter_file_catalog",
+  "name": "File Catalog / Starter Tools",
+  "description": "Search a folder and inventory file sizes and extensions.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

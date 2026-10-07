@@ -1,0 +1,7 @@
+{
+  "id": "starter_markdown_report",
+  "name": "Report Builder / Starter Tools",
+  "description": "Create a portable Markdown report from structured records.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

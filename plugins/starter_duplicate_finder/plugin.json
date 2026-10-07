@@ -1,0 +1,7 @@
+{
+  "id": "starter_duplicate_finder",
+  "name": "Duplicate Finder / Starter Tools",
+  "description": "Find identical files by size and streaming SHA-256; report only.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

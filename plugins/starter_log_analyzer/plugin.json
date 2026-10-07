@@ -1,0 +1,7 @@
+{
+  "id": "starter_log_analyzer",
+  "name": "Log Analyzer / Starter Tools",
+  "description": "Count severity levels and find repeated messages.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

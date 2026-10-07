@@ -1,0 +1,7 @@
+{
+  "id": "starter_codec_lab",
+  "name": "Codec Lab / Starter Tools",
+  "description": "UTF-8 Base64, URL encoding and text fingerprints.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

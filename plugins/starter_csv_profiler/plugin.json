@@ -1,0 +1,7 @@
+{
+  "id": "starter_csv_profiler",
+  "name": "CSV Profiler / Starter Tools",
+  "description": "Column types, missing values, distinct counts and numeric summaries.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

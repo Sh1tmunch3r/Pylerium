@@ -1,0 +1,7 @@
+{
+  "id": "starter_json_lab",
+  "name": "JSON Lab / Starter Tools",
+  "description": "Validate, format, flatten and inspect JSON.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}
