@@ -32,13 +32,3 @@ The icon picker appears when running the builder directly. Workshop also provide
 ```powershell
 python -m unittest discover -s . -p "test_*.py"
 ```
-
-## Repository preparation
-
-This folder is prepared for https://github.com/Sh1tmunch3r/Pylerium. No commit or push was performed. Origin's push URL and a local pre-push hook intentionally block uploads. Review the files before committing. When you explicitly decide to enable uploads, remove .git/hooks/pre-push and run:
-
-```powershell
-git config --unset-all remote.origin.pushurl
-```
-
-The accidental parent repository metadata is preserved beside this folder under .git-paused-*; it is no longer active. Any conflicting destination files were backed up beside this folder under .pylerium-copy-backup-* before replacement.
