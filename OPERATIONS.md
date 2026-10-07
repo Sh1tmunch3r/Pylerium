@@ -89,7 +89,7 @@ Project, loadout, operator and mission references are selected from saved worksp
 In Maps, use **Add Node** to select a project, loadout, optional operator and prerequisite checkboxes. A unique step label is generated automatically. The step table shows project/loadout names and supports edit/remove actions; JSON remains available for advanced editing. **Fix Duplicate Labels** repairs repeated labels without deleting steps. Dependencies referring to an old duplicate label remain attached to its first occurrence; review that choice before saving. Removing a step also removes references to it from downstream prerequisites.
 
 ## In-app plugin builder
-
+<img width="1560" height="669" alt="image" src="https://github.com/user-attachments/assets/d5d3e193-dacf-452b-ba4d-238709871cc5" />
 Both the Workshop and plugin-builder editors have a small **Focus editor** button. It moves the same editor into a nearly full-screen themed card; its document, cursor, selection, and undo history remain intact. Use Return to Menu or Escape to restore it. Save works in the card, with Ctrl+S as a shortcut.
 
 Python suggestions appear after a short pause when typing an identifier, or after a recognized member prefix such as `term.` or `ctx.`. Suggestions include keywords, built-ins, names found in the current document, and selected SDK/standard-library member hints. Tab or a click accepts a suggestion; Escape dismisses it and Ctrl+J requests one. Suggestions are suppressed inside comments/strings and can be disabled in the focus-card header. This is local lightweight completion, without executing imports, contacting AI, or requiring a language server; it is not full VS Code/Pylance type inference.
@@ -116,7 +116,7 @@ Maps use this format (IDs are shown in the JSON editor; the demo is preconfigure
 Each node chooses its own project/profile; `operator` supplies its execution callsign. The separately saved operator pairing is used when deploying from the Operators page.
 
 ## Shared data and persistence
-
+<img width="1879" height="807" alt="image" src="https://github.com/user-attachments/assets/a13e5052-f75f-4521-b788-7224260c60b7" />
 `orchestration_data/shared.sqlite3` stores projects, profiles, operators, maps, missions, settings, shared JSON values, workflow results, and run logs. Code lives under `orchestration_data/projects/`. SQLite WAL and atomic updates allow concurrent workers to share state without losing increments.
 
 ```python
@@ -134,7 +134,7 @@ Bundles include entry scripts, execution profiles, operators, maps, and shared v
 Each run retains the most recent 2 MB of output; the live console retains 10,000 text blocks. Scripts execute with normal account permissions, not in a security sandbox. Stop and timeout controls kill the directly launched Python process; descendants spawned by a script require their own cleanup. The UI must remain open for missions to run.
 
 ## Optional Ollama
-
+<img width="349" height="816" alt="image" src="https://github.com/user-attachments/assets/bdc89fe9-f617-44d0-a1ae-711c5e54a1ae" />
 AI is **off by default**. Enable it in Settings and enter a dynamic HTTP(S) endpoint. The downloaded-model selector loads from [`GET /api/tags`](https://docs.ollama.com/api/tags); choose a model and save. Discovery is asynchronous with a 10-second timeout and never downloads models. Re-enable assistance or use Refresh Downloaded Models after changing servers/models.
 
 The Workshop sends your prompt to Ollama's [`POST /api/generate`](https://docs.ollama.com/api/generate) endpoint only when you click Generate Draft. Requests are asynchronous and have a 120-second transfer timeout. Python Markdown fences (including spaced backticks), response prose outside fences, standalone language tags, and reasoning tags are removed. Valid Python strings containing backticks are preserved. Drafts can be corrected in the draft editor; invalid Python is not inserted. Drafts must be applied, reviewed, saved, and explicitly run; no model automatically executes code. The runner works without Ollama installed.
