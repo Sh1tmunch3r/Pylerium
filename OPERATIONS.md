@@ -69,7 +69,7 @@ The backup at `backups/loadout-menu.assets-backup.py` includes its own helper an
 - **Missions:** schedule saved maps at recurring intervals while the app is open. Busy runners defer a mission; missed intervals are not replayed. Stop-all disables recurring missions.
   <img width="1896" height="1062" alt="image" src="https://github.com/user-attachments/assets/f3afedee-2d73-4b74-b4bd-86a8221295c0" />
 - **Arsenal:** select project cards, import a Python entry script, or export/import bundles.
-  <img width="1907" height="1070" alt="image" src="https://github.com/user-attachments/assets/31ac2193-42e7-43e3-a654-e0d99f987bfa" />
+  <img width="1904" height="1069" alt="image" src="https://github.com/user-attachments/assets/1ebdab4c-a076-48d9-9958-30944d361648" />
 - **Workshop:** create tools from templates, edit highlighted Python with line numbers and automatic indentation, set JSON arguments and working directories, save, and run. Imported scripts are copied; adjacent modules/resources are not copied automatically. Use a working directory containing required resources and imports.
   <img width="1911" height="1069" alt="image" src="https://github.com/user-attachments/assets/0b38223f-121e-4a98-96fd-54e50e50715a" />
 - **Console:** render ANSI colors, tables, gradients, and cursor-based progress output. Select an isolated run or a grouped view of all runs, freeze the display, customize fonts/output themes/styles, stop selected jobs, and export readable output.
