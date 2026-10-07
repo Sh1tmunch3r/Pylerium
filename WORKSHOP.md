@@ -288,6 +288,8 @@ Settings now includes Runtime, Display, Ambient, Marquee, Editors, Models, Conso
 
 ### Executable branding and advanced options
 
+<img width="960" height="697" alt="image" src="https://github.com/user-attachments/assets/ded2ea8e-da50-4060-a45b-8e2722ca8baf" />
+
 Workshop's **Build EXE** dialog includes an icon picker and collapsible branding/packaging controls. ICO, PNG, JPEG, WebP and BMP icons become a transparent multi-resolution Windows icon (16–256 pixels). The icon is embedded in the executable and applied to GUI windows using the shared toolkit.
 
 Choose a single executable or application folder, GUI/console mode, Windows version/company/product/description/copyright, debug mode, optimization, cache cleaning, compression and administrator launch behavior. Advanced JSON exposes extra data/binaries, import paths, exclusions, package collections, hooks, runtime hooks, splash screen, Windows manifest, version resource file and temporary extraction directory. `extra_args` is a list of individual arguments for any other PyInstaller options; no shell command is constructed. Build options persist per project. Some advanced options require additional tools or resources supported by the selected PyInstaller installation.
@@ -296,6 +298,8 @@ Running `build_exe.py` directly opens the icon picker before building Pylerium. 
 
 
 ## Killchain global command bar
+
+<img width="880" height="649" alt="image" src="https://github.com/user-attachments/assets/5489c1ce-7261-4e99-b8f7-6d246d7a107d" />
 
 While Pylerium is running, Ctrl+Space opens the floating command bar over Windows, including when the main window is minimized. The header button also opens it. If another application owns Ctrl+Space, the overlay reports the conflict; the header button remains available. Closing Pylerium releases the hotkey and stops clipboard capture.
 
@@ -309,6 +313,8 @@ Clipboard capture is enabled by default and its pause state persists. The queue 
 
 
 ## Tactile audio and animated status
+
+<img width="1901" height="816" alt="image" src="https://github.com/user-attachments/assets/378575f2-51e2-45da-9ad6-ae438683375f" />
 
 Settings → Audio controls opt-in playback, master volume, individual hover/click/deploy/success/error cues and local WAV/MP3 overrides. Defaults are in assets/audio. Hover cues are throttled; players are reused. No multimedia player is created while disabled. Process cues cover Workshop, schedules, plugin launchers and Killchain through the shared runner. Analysis tools and AppWindow background tasks also report completion.
 
