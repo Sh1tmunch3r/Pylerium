@@ -103,6 +103,10 @@ class Runner(QObject):
         self.enabled_plugins = []
 
     def launch(self, project, profile, operator='Local operator'):
+        loadout = self.store.get('project_loadout', project['id'])
+        if loadout:
+            from project_loadout import prepare_launch
+            project, profile = prepare_launch(project, profile, loadout)
         executable = str(profile.get('python') or python_executable())
         # One-file extraction paths change on each launch. Remap our bundled runtime.
         if getattr(sys, 'frozen', False) and '_MEI' in executable:
@@ -161,7 +165,14 @@ class Runner(QObject):
             'succeeded' if code == 0 and status == QProcess.ExitStatus.NormalExit else 'failed'))
         process.errorOccurred.connect(lambda error: self._error(ident, error))
         timer.timeout.connect(lambda: self.stop(ident, 'timed out'))
-        process.start(executable, ['-u', str(script), *arguments])
+        command = ['-u', str(script), *arguments]
+        if project.get('_execution_loadout'):
+            env.insert('PYLERIUM_EXECUTION_LOADOUT', json.dumps(project['_execution_loadout']))
+            process.setProcessEnvironment(env)
+            runtime=Path(__file__).with_name('loadout_runtime.py')
+            if not runtime.is_file(): runtime=sdk_root()/'loadout_runtime.py'
+            command = ['-u', str(runtime), str(script), *arguments]
+        process.start(executable, command)
         self.changed.emit()
         return ident
 
@@ -216,6 +227,11 @@ class Runner(QObject):
         job = self.jobs.get(ident)
         if job:
             job['stop_reason'] = reason
+            if os.name == 'nt' and job['process'].processId():
+                # Kill the pipeline's descendants as well as its wrapper.
+                import subprocess
+                subprocess.run(['taskkill', '/PID', str(job['process'].processId()), '/T', '/F'],
+                               capture_output=True, creationflags=subprocess.CREATE_NO_WINDOW)
             job['process'].kill()
 
     def stop_all(self):

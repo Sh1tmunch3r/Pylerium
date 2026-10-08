@@ -69,3 +69,9 @@ Assign **OBJ, GLB, glTF, STL, PLY or OFF** from Assets. GLB/glTF support node tr
 Rendering uses a dedicated offscreen GPU worker with at most one in-flight frame, native device resolution, 4× MSAA, mipmaps and anisotropic filtering. Buffers/material textures are reused; paused views reuse their cached frame. Normal/bump and metallic/roughness maps contribute to studio lighting when supplied. A software fallback remains available. **Inspect weapon** opens the large interactive studio with a 360° turntable, camera controls, material list and texture viewing. Skeletal animation is not evaluated. FBX, Blender `.blend`, CAD and compressed Draco meshes are not included; export these to an uncompressed supported format. Correct UVs and matching textures are still required.
 
 Source dependencies: `python -m pip install PyQt6 numpy trimesh pillow moderngl`. The portable executable bundles these dependencies for both the host and Workshop interpreter. See [Model preview details](WORKSHOP.md#texture-previews).
+
+## Creative applications and reusable elements
+
+Workshop offers 12 **GUI / Creative** projects and Plugin Builder offers their 12 **Experience** counterparts. Build visual instruments, simulated worlds, interactive stories, focus experiences and creative boards. These are template choices rather than automatically installed/enabled plugins.
+
+The 12 **GUI / Element** starters cover search, context menus, drag/drop, validation, tables, disclosure panels, progress/cancellation, tabs, color/clipboard controls, split previews and command palettes. Six new boilerplates cover event buses, history, world generation, registries, state machines and atomic saves.

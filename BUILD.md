@@ -41,3 +41,5 @@ Remove-Item Env:PYLERIUM_HOME
 Use a fresh smoke workspace, since this check creates two same-name test projects and updates a shared value. The JSON result reports startup, saving, an actual child Python run (terminal output/shared SQLite/SSL/asyncio), focus mode and fullscreen exit. A failed check reports its traceback. GUI applications can return control to PowerShell before finishing; wait for the JSON result or launch with `Start-Process -Wait`.
 
 Further usage: [Workshop and terminal](WORKSHOP.md), [Plugins](PLUGINS.md), [Operations](OPERATIONS.md).
+
+Project execution and packaging are separate. **Run Project** never starts built-in PyInstaller packaging; choose **Workshop → Build EXE** or invoke `build_exe.py` explicitly. Legacy loadout build hooks are ignored.

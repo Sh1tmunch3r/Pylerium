@@ -1,9 +1,9 @@
-# <img width="559" height="559" alt="pixil-frame-0 (12)" src="https://github.com/user-attachments/assets/daea753a-f6af-43d6-bb30-8bb5cdde061d" /> 
+# <img width="559" height="559" alt="pixil-frame-0 (12)" src="https://github.com/user-attachments/assets/daea753a-f6af-43d6-bb30-8bb5cdde061d" />
 # Pylerium local operations
 
 Detailed authoring guides: [Workshop and terminal](WORKSHOP.md) · [Plugin builder and API](PLUGINS.md) · [Windows executable](BUILD.md)
 
-Requires Python 3.10+ and PyQt6 (`python -m pip install PyQt6`). No AI service or additional rendering package is required. The model preview defaults to a bounded textured software renderer; native OpenGL is an optional compatibility-sensitive path (`PYLERIUM_NATIVE_GL=1`).
+Requires Python 3.10+; install the complete runtime with `python -m pip install -r requirements.txt`. AI assistance is optional. Models load asynchronously and use the current textured renderer, with software fallback where GPU rendering is unavailable. Native Qt OpenGL is an optional path (`PYLERIUM_NATIVE_GL=1`).
 
 ```powershell
 python loadout-menu.py          # Original loadout menu with asset support
@@ -15,7 +15,7 @@ The runner is a copy of the asset-enabled menu with a separate functional interf
 
 ## Assets
 
-`assets/manifest.json` maps **item names and stable `project:<id>` keys** to files beneath `assets/`. Missing images/models fall back to the existing procedural artwork. Example assets are original SVG drawings and a simple OBJ inspection prop.
+`assets/manifest.json` maps **item names, stable `project:<id>` keys and `loadout:<project-id>:<slot>` keys** to files beneath `assets/`. Missing images/models fall back to the existing procedural artwork. Example assets are original SVG drawings and a simple OBJ inspection prop.
 
 ```json
 {
@@ -35,11 +35,9 @@ Icons fit within the card's image zone, preserving aspect ratio and leaving labe
 
 OBJ models support vertices, polygon faces, negative indices, UV coordinates, and line segments. They are centered and fitted automatically; `rotation` contains X/Y/Z angles in degrees. Keep the OBJ, referenced `.mtl` files, and texture subfolders together when importing: the importer copies referenced dependencies while preserving their relative paths. References must resolve inside the source model folder; missing or external resources are reported. **Existing models imported by the older single-file importer must be re-imported from their original folder to recover omitted materials/textures.**
 
-Models and textures load on background workers, never inside paint events. The optional Qt-native GPU buffers render the full accepted triangle geometry and UV-mapped base-color textures; MTL diffuse colors and opacity are supported. The software fallback limits rendering to 1,200 edges and 400 sampled triangles and retains textures, orbit, zoom, pause, fit, and stat profiles. Fallback sampling can omit small surface details. Both paths keep the original dark/cyan/orange styling. The Textured / Wireframe control changes model display without reloading its files.
+Models and textures load on background workers rather than inside card paint events. Import **OBJ, GLB, glTF, STL, PLY and OFF**. Keep external material/texture dependencies alongside their source model when importing. Static geometry is supported; skeletal animation is not evaluated. GPU shading supports discovered materials and maps; software fallback preserves textured model inspection. Missing resources and unsupported content show an explanation.
 
-Preview limits are 96 MB per OBJ, 500,000 vertices, 300,000 triangles, 16 decoded material textures, and 2,048 pixels per texture dimension. The importer caps a bundle at 256 MB. Original images/model files remain intact; only preview images are scaled. Normal, roughness, specular and other maps are copied when referenced but not shaded by this base-color renderer. Animation rigs, GLTF, and FBX are not loaded. Failures leave the procedural preview available and display an explanation.
-
-The Assets page lets you choose an existing project/item, inspect texture counts and missing-resource messages, see a correctly fitted icon, or assign a manual texture override. A texture override still requires usable OBJ UV coordinates. Use **Reload Asset Manifest** after changing files on disk. Backgrounds fill with aspect-preserving cropping; icons fit with transparent padding.
+The Assets studio selects project and execution-slot assignments, filters targets, previews images and models, adjusts rotation, assigns texture overrides and removes artwork. Use **Reload Asset Manifest** after external changes. Each loadout card shows static image/model artwork; its inspection panel supports orbit, zoom, fit, materials/wireframe and expanded inspection.
 
 The runner's **Assets** page imports files and updates the manifest. From Python:
 
@@ -54,7 +52,7 @@ background = ASSETS.import_file(r"C:\art\lobby.jpg", "background")
 ASSETS.set_background(background, opacity=0.6)
 ```
 
-The backup at `backups/loadout-menu.assets-backup.py` includes its own helper and assets snapshot. Run that file to use the preserved menu version.
+`loadout-menu.assets-backup.py` supplies the execution screen’s original card template. The project-aware screen, runtime and artwork integration live in `project_loadout_ui.py`, `project_loadout.py`, `loadout_runtime.py` and `loadout_artwork.py`. Local backup snapshots are ignored by Git.
 
 ## Navigation and execution
 
@@ -68,7 +66,7 @@ The backup at `backups/loadout-menu.assets-backup.py` includes its own helper an
   <img width="1900" height="1060" alt="image" src="https://github.com/user-attachments/assets/a229802b-1738-4063-b7d3-9d62a154b200" />
 - **Missions:** schedule saved maps at recurring intervals while the app is open. Busy runners defer a mission; missed intervals are not replayed. Stop-all disables recurring missions.
   <img width="1896" height="1062" alt="image" src="https://github.com/user-attachments/assets/f3afedee-2d73-4b74-b4bd-86a8221295c0" />
-- **Arsenal:** select project cards, import a Python entry script, or export/import bundles.
+- **Arsenal:** open a project execution loadout, import a Python entry script, or export/import bundles. Right-click projects for editor/run actions, renaming, duplication, opening the project folder, copying its path and assigning artwork to individual slots.
   <img width="1904" height="1069" alt="image" src="https://github.com/user-attachments/assets/1ebdab4c-a076-48d9-9958-30944d361648" />
 - **Workshop:** create tools from templates, edit highlighted Python with line numbers and automatic indentation, set JSON arguments and working directories, save, and run. Imported scripts are copied; adjacent modules/resources are not copied automatically. Use a working directory containing required resources and imports.
   <img width="1911" height="1069" alt="image" src="https://github.com/user-attachments/assets/0b38223f-121e-4a98-96fd-54e50e50715a" />
@@ -115,6 +113,31 @@ Maps use this format (IDs are shown in the JSON editor; the demo is preconfigure
 ```
 
 Each node chooses its own project/profile; `operator` supplies its execution callsign. The separately saved operator pairing is used when deploying from the Operators page.
+
+## Project loadout and runtime policies
+
+Loadouts are saved per project as JSON in the local document store. The primary entry point accepts a base argument array plus any named attachment arrays. Secondary processes may run before execution or alongside it; companions stop when the primary pipeline ends. Context loads a selected environment file and explicit variable overrides.
+
+| Slot | Runtime behavior |
+| --- | --- |
+| Primary | Entry point, CLI arguments and editor access |
+| Secondary | Pre-execution helpers or companion processes |
+| Tactical | cProfile, debug logging or strict warnings |
+| Output / lethal | JSON execution report or configured post-run script |
+| Field upgrade | Environment file and variable overrides |
+| Perks and specialty | Assignable policy toggles |
+| Wildcard | Worker/device hints or multiple execution passes |
+
+**Run Project executes Python; it never invokes built-in EXE packaging.** Use **Workshop → Build EXE** explicitly. Old `pyinstaller`/`build_compiler` output hook selections normalize to `none`.
+
+- **Ghost:** use a project `.venv` with the installed SDK dependencies available through system site packages. Existing environments are updated to keep those dependencies visible.
+- **Scavenger:** install `requirements.txt` when present, otherwise continue with available dependencies.
+- **Juggernaut:** request Windows administrator access, wait for the elevated project, stream its output and preserve its exit code. Declining elevation fails the run.
+- **Ninja:** hide console windows while retaining captured project output.
+- **Sleight of Hand:** run Ruff formatting before execution; Ruff must be available in the selected interpreter.
+- **Hardline:** continue after optional helper-hook failures; primary project failures still fail the run.
+
+Overkill and Danger Close provide CPU worker and CUDA-device hints. Project libraries must support and use these settings; selecting them does not automatically parallelize code or install GPU drivers. Repeat runs the configured number of passes and stops on primary failure.
 
 ## Shared data and persistence
 <img width="1879" height="807" alt="image" src="https://github.com/user-attachments/assets/a13e5052-f75f-4521-b788-7224260c60b7" />

@@ -139,6 +139,10 @@ class RenderWorker(QObject):
         except queue.Empty:pass
         try:self.jobs.put_nowait(None)
         except queue.Full:pass
+        # Release the worker-owned GL context before Qt destroys its receiver.
+        # Otherwise a daemon may still emit signals during interpreter teardown.
+        if threading.current_thread() is not self.thread:
+            self.thread.join(timeout=5)
 
     def work(self):
         backend=None;current=None;gpu_failed=os.environ.get('PYLERIUM_RENDERER')=='software';reason=''

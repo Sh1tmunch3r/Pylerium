@@ -2,6 +2,8 @@
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
+from model_offscreen import OffscreenRenderer
 from pathlib import Path
 from threading import Event
 from types import SimpleNamespace
@@ -73,13 +75,27 @@ class SurfaceTests(unittest.TestCase):
         scene=self.scene(repeat=1500)
         canvas=InteractiveModelCanvas();canvas.resize(640,380)
         canvas.item_data=SimpleNamespace(name='fixture',category='RIFLE');canvas.paused=True
-        canvas.loaded('fixture',scene,'');canvas.show()
         ticks=[];timer=QTimer();timer.setInterval(5);timer.timeout.connect(lambda:ticks.append(1));timer.start()
+        entered,release=Event(),Event()
+        software_render=SoftwareModelRenderer.render
+        gpu_render=OffscreenRenderer.render
+        def gated(render):
+            def run(renderer,*args,**kwargs):
+                entered.set()
+                if not release.wait(10):raise RuntimeError('Test renderer was not released')
+                return render(renderer,*args,**kwargs)
+            return run
         try:
-            wait_until(lambda:canvas.surface_frame is not None,15)
-            self.assertGreater(len(ticks),1)
-            image=canvas.surface_frame;APP.processEvents();canvas.grab()
-            self.assertIs(canvas.surface_frame,image)
-            self.assertLess(canvas.last_paint_ms,50)
+            with patch.object(SoftwareModelRenderer,'render',gated(software_render)), patch.object(OffscreenRenderer,'render',gated(gpu_render)):
+                canvas.loaded('fixture',scene,'');canvas.show()
+                wait_until(entered.is_set,5)
+                ticks.clear()
+                wait_until(lambda:len(ticks)>1,5)
+                self.assertIsNone(canvas.surface_frame)
+                release.set()
+                wait_until(lambda:canvas.surface_frame is not None,15)
+                image=canvas.surface_frame;APP.processEvents();canvas.grab()
+                self.assertIs(canvas.surface_frame,image)
+                self.assertLess(canvas.last_paint_ms,50)
         finally:
-            timer.stop();canvas.close();APP.processEvents()
+            release.set();timer.stop();canvas.close();APP.processEvents()

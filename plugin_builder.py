@@ -25,6 +25,10 @@ TEMPLATES = {
 from extended_templates import TOOL_PLUGIN_TEMPLATES
 TEMPLATES.update(TOOL_PLUGIN_TEMPLATES)
 
+
+from creative_templates import CREATIVE_PLUGINS
+TEMPLATES.update(CREATIVE_PLUGINS)
+
 class PluginBuilder(QWidget):
     def __init__(self,window):
         super().__init__()

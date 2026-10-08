@@ -4,6 +4,9 @@ import math
 import tempfile
 import time
 import unittest
+from threading import Event
+from unittest.mock import patch
+import asset_helper
 from pathlib import Path
 
 from test_orchestration import APP,wait_until
@@ -68,11 +71,26 @@ class ModelTests(unittest.TestCase):
         timer.setInterval(5)
         timer.timeout.connect(lambda:ticks.append(time.monotonic()))
         timer.start()
-        begin = time.perf_counter()
-        library.request_model('large')
-        self.assertLess(time.perf_counter()-begin,0.1)
-        wait_until(lambda:bool(result),15)
-        timer.stop()
+        # Hold the worker until the GUI timer has demonstrably progressed.
+        # Fast loads can otherwise finish before three timer deliveries.
+        release = Event()
+        actual_load = asset_helper.load_model
+        def gated_load(*args, **kwargs):
+            if not release.wait(10):
+                raise RuntimeError('Test worker was not released')
+            return actual_load(*args, **kwargs)
+        try:
+            with patch('asset_helper.load_model', side_effect=gated_load):
+                begin = time.perf_counter()
+                library.request_model('large')
+                self.assertLess(time.perf_counter()-begin,0.1)
+                wait_until(lambda:len(ticks)>2,5)
+                self.assertFalse(result)
+                release.set()
+                wait_until(lambda:bool(result),15)
+        finally:
+            release.set()
+            timer.stop()
         scene,error = result[0]
         self.assertEqual(error,'')
         self.assertGreater(len(ticks),2)

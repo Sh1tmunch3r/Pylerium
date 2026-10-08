@@ -51,7 +51,6 @@ import time
 from dataclasses import dataclass, field
 from typing import Callable, Optional
 from asset_helper import ASSETS
-from model_preview import InteractiveModelCanvas
 
 from PyQt6.QtCore import (
     QEasingCurve,
@@ -793,9 +792,11 @@ class LoadoutCard(QWidget):
         self.animation.start()
 
     def mousePressEvent(self, event):
+        # A connected slot may open a nested dialog and delete this card.
+        # Finish all QWidget handling before emitting the callback.
+        super().mousePressEvent(event)
         if event.button() == Qt.MouseButton.LeftButton:
             self.clicked.emit(self)
-        super().mousePressEvent(event)
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -961,7 +962,7 @@ class LoadoutCard(QWidget):
             )
 
     def draw_item_icon(self, p, rect):
-        if ASSETS.paint_image(p, rect, ASSETS.entry(getattr(self.item_data, 'asset_key', self.item_data.name)).get('icon')):
+        if ASSETS.paint_image(p, rect, ASSETS.entry(self.item_data.name).get('icon')):
             return
         category = self.item_data.category.upper()
 
@@ -1458,8 +1459,184 @@ class StatBar(QWidget):
         )
 
 
-class WeaponPreviewCanvas(InteractiveModelCanvas):
-    pass
+class WeaponPreviewCanvas(QWidget):
+    """Dependency-free perspective viewport with procedural inspection geometry."""
+
+    def __init__(self):
+        super().__init__()
+        self.item_data = PRIMARY_ITEMS[0]
+        self.rotation = 0.0
+        self.elevation = -0.28
+        self.zoom = 1.0
+        self.paused = False
+        self.profile_mode = False
+        self.drag_position = None
+        self.last_frame = time.monotonic()
+        self.sync_until = 0.0
+        self.setMinimumHeight(250)
+        self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
+        self.setCursor(Qt.CursorShape.OpenHandCursor)
+        self.setToolTip("Drag to orbit • Scroll to zoom • Space to pause • Double-click to reset")
+        self.timer = QTimer(self)
+        self.timer.setTimerType(Qt.TimerType.PreciseTimer)
+        self.timer.timeout.connect(self.animate)
+
+    def showEvent(self, event):
+        self.last_frame = time.monotonic()
+        self.timer.start(16)
+        super().showEvent(event)
+
+    def hideEvent(self, event):
+        self.timer.stop()
+        super().hideEvent(event)
+
+    def set_item(self, item_data):
+        self.item_data = item_data
+        self.sync_until = time.monotonic() + 0.7
+        self.update()
+
+    def animate(self):
+        now = time.monotonic()
+        dt = min(now - self.last_frame, 0.1)
+        self.last_frame = now
+        if not self.paused and self.drag_position is None:
+            self.rotation = (self.rotation + dt * 0.22) % math.tau
+        self.update()
+
+    def reset_view(self):
+        self.rotation, self.elevation, self.zoom = 0.0, -0.28, 1.0
+        self.update()
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.drag_position = event.position()
+            self.setFocus()
+            self.setCursor(Qt.CursorShape.ClosedHandCursor)
+
+    def mouseMoveEvent(self, event):
+        if self.drag_position is not None:
+            delta = event.position() - self.drag_position
+            self.rotation += delta.x() * 0.009
+            self.elevation = max(-1.1, min(0.6, self.elevation + delta.y() * 0.006))
+            self.drag_position = event.position()
+            self.update()
+
+    def mouseReleaseEvent(self, event):
+        if event.button() == Qt.MouseButton.LeftButton:
+            self.drag_position = None
+            self.setCursor(Qt.CursorShape.OpenHandCursor)
+
+    def mouseDoubleClickEvent(self, event):
+        self.reset_view()
+
+    def wheelEvent(self, event):
+        self.zoom = max(0.6, min(1.7, self.zoom * math.exp(event.angleDelta().y() / 1200)))
+        self.update()
+        event.accept()
+
+    def keyPressEvent(self, event):
+        if event.key() == Qt.Key.Key_Space:
+            self.paused = not self.paused
+            self.update()
+            event.accept()
+        else:
+            super().keyPressEvent(event)
+
+    def project(self, vertex):
+        x, y, z = vertex
+        c, s = math.cos(self.rotation), math.sin(self.rotation)
+        x, z = x * c + z * s, -x * s + z * c
+        c, s = math.cos(self.elevation), math.sin(self.elevation)
+        y, z = y * c - z * s, y * s + z * c
+        scale = min(self.width(), self.height()) * 0.92 * self.zoom / (5.5 + z)
+        return QPointF(self.width() / 2 + x * scale,
+                       self.height() * 0.49 - y * scale), z
+
+    def geometry(self):
+        model = ASSETS.model(self.item_data.name)
+        if model:
+            return model
+        # Stylized procedural silhouettes; these are not imported game models.
+        category = self.item_data.category
+        if "RIFLE" in category or "GUN" in category or category == "PISTOL":
+            short = category == "PISTOL"
+            boxes = [(-0.65, 0.1, 0, 1.4, 0.35, 0.3),
+                     (0.85, 0.12, 0, 0.55 if short else 1.25, 0.10, 0.10),
+                     (-1.35, 0.02, 0, 0.5, 0.45, 0.25),
+                     (0, -0.4, 0, 0.25, 0.65, 0.22),
+                     (0.42, -0.3, 0, 0.18, 0.45, 0.2)]
+            if self.item_data.attachments:
+                boxes.append((0.15, 0.42, 0, 0.35, 0.22, 0.22))
+        elif category == "MELEE":
+            boxes = [(-0.8, 0, 0, 0.8, 0.22, 0.2), (0.35, 0, 0, 1.4, 0.28, 0.06)]
+        else:
+            boxes = [(0, 0, 0, 1.1, 1.25, 0.8), (0, 0.75, 0, 0.5, 0.18, 0.4)]
+        segments = []
+        for cx, cy, cz, w, h, d in boxes:
+            vertices = [(cx + dx*w/2, cy + dy*h/2, cz + dz*d/2)
+                        for dx in (-1, 1) for dy in (-1, 1) for dz in (-1, 1)]
+            for i in range(8):
+                for bit in (1, 2, 4):
+                    j = i ^ bit
+                    if i < j:
+                        segments.append((vertices[i], vertices[j]))
+        return segments
+
+    def paintEvent(self, event):
+        p = QPainter(self)
+        p.setRenderHint(QPainter.RenderHint.Antialiasing)
+        p.fillRect(self.rect(), QColor("#0b0c0e"))
+        glow = QRadialGradient(QPointF(self.width()/2, self.height()/2), self.width()*0.65)
+        glow.setColorAt(0, QColor(20, 85, 100, 65))
+        glow.setColorAt(1, QColor(0, 0, 0, 0))
+        p.fillRect(self.rect(), glow)
+        p.setClipRect(self.rect().adjusted(12, 35, -12, -35))
+        p.setPen(QPen(QColor(38, 216, 238, 35), 1))
+        for i in range(-8, 9):
+            n = i * 0.4
+            for a, b in [((n, -1.1, -3.2), (n, -1.1, 3.2)),
+                         ((-3.2, -1.1, n), (3.2, -1.1, n))]:
+                p.drawLine(self.project(a)[0], self.project(b)[0])
+        if self.profile_mode:
+            values = [self.item_data.damage, self.item_data.firepower, self.item_data.accuracy,
+                      self.item_data.mobility, self.item_data.handling, self.item_data.range_stat]
+            segments = []
+            for i, value in enumerate(values):
+                x = (i - 2.5) * 0.55
+                top = -0.8 + value / 65
+                for z in (-0.3, 0.3):
+                    segments.extend([((x, -0.8, z), (x, top, z)),
+                                     ((x, top, z), (x+0.3, top, z)),
+                                     ((x+0.3, top, z), (x+0.3, -0.8, z))])
+                segments.append(((x, top, -0.3), (x, top, 0.3)))
+        else:
+            segments = self.geometry()
+        projected = [(self.project(a), self.project(b)) for a, b in segments]
+        projected.sort(key=lambda pair: pair[0][1] + pair[1][1], reverse=True)
+        for (a, za), (b, zb) in projected:
+            alpha = max(70, min(255, int(190 - (za+zb)*25)))
+            p.setPen(QPen(QColor(38, 216, 238, 25), 5))
+            p.drawLine(a, b)
+            p.setPen(QPen(QColor(80, 225, 240, alpha), 1.2))
+            p.drawLine(a, b)
+        # Scan is illustrative, never presented as measured live telemetry.
+        if not self.paused:
+            scan_y = 40 + ((self.rotation % math.tau) / math.tau) * max(1, self.height()-80)
+            p.setPen(QPen(QColor(240, 100, 19, 110), 1))
+            p.drawLine(QPointF(15, scan_y), QPointF(self.width()-15, scan_y))
+        p.setClipping(False)
+        p.setPen(QPen(QColor(145, 170, 180, 170), 1))
+        for x, y, dx, dy in [(10,10,1,1),(self.width()-10,10,-1,1),
+                              (10,self.height()-10,1,-1),(self.width()-10,self.height()-10,-1,-1)]:
+            p.drawLine(x,y,x+dx*16,y)
+            p.drawLine(x,y,x,y+dy*16)
+        p.setFont(QFont("Consolas", 8))
+        p.setPen(CYAN)
+        status = "SYNCHRONIZING..." if time.monotonic() < self.sync_until else ("PAUSED" if self.paused else "AUTO ORBIT")
+        p.drawText(QRectF(22, 12, self.width()-44, 20), Qt.AlignmentFlag.AlignLeft, status)
+        p.setPen(TEXT_DIM)
+        p.drawText(QRectF(22, self.height()-30, self.width()-44, 20),
+                   Qt.AlignmentFlag.AlignLeft, f"PROCEDURAL {'STAT PROFILE' if self.profile_mode else 'WIREFRAME'}  /  {self.zoom:.1f}x")
 
 
 class PreviewPanel(QFrame):
@@ -1550,18 +1727,6 @@ class PreviewPanel(QFrame):
         hint.setStyleSheet("color:#70858c;")
         root.addWidget(hint)
 
-        self.model_help = QLabel()
-        self.model_help.setWordWrap(True)
-        self.model_help.setFont(font(11))
-        self.model_help.setStyleSheet("color:#8299a4;")
-        self.canvas.model_status.connect(self.model_help.setText)
-        root.addWidget(self.model_help)
-
-        texture_button = QPushButton("Textured / wireframe")
-        texture_button.setToolTip("Show discovered material textures, or inspect the lightweight wireframe.")
-        texture_button.clicked.connect(self.toggle_textures)
-        controls.addWidget(texture_button)
-
         self.description = QLabel()
         self.description.setWordWrap(True)
         self.description.setFont(font(12))
@@ -1630,14 +1795,8 @@ class PreviewPanel(QFrame):
         self.canvas.paused = not self.canvas.paused
         self.canvas.update()
 
-    def toggle_textures(self):
-        self.canvas.textured = not self.canvas.textured
-        self.canvas.update_gpu_visibility()
-        self.canvas.update()
-
     def toggle_profile(self):
         self.canvas.profile_mode = not self.canvas.profile_mode
-        self.canvas.update_gpu_visibility()
         self.canvas.update()
 
     def set_item(self, data):

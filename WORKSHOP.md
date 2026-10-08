@@ -288,6 +288,8 @@ Assets → **Assign header logo** imports a managed image before the Pylerium he
 Settings now includes Runtime, Display, Ambient, Marquee, Editors, Models, Console, Assistance, Storage and Builds categories. Atmospheric options include Sweep/Breathe/Orbit, speed, intensity, glow colour, frame limit, grid, particles and scanlines. Background animation suspends while hidden or minimized. Editor completion/wrapping defaults, model quality/grid/orbit defaults, console follow/refresh and build-inclusion defaults persist in the workspace database. Save Settings applies them to existing widgets and defaults for newly created editors/model canvases.
 
 
+**Run Project** executes the selected Python entry point with its saved loadout. It never invokes executable packaging. Use **Build EXE** explicitly; old C4/PyInstaller output hooks are disabled automatically.
+
 ### Executable branding and advanced options
 
 Workshop's **Build EXE** dialog includes an icon picker and collapsible branding/packaging controls. ICO, PNG, JPEG, WebP and BMP icons become a transparent multi-resolution Windows icon (16–256 pixels). The icon is embedded in the executable and applied to GUI windows using the shared toolkit.
@@ -325,3 +327,11 @@ New editable tool starters include JSON, CSV, regex, diff, checksums, duplicate 
 Settings → Marquee adds Static, Gradient, Rainbow, Pulse and Scanner effects plus a 10–60 FPS limit. Text layout is cached and hidden widgets stop animating. Terminal theme colours, custom styles and semantic success/error/warning colours remain supported.
 
 Workshop-launched GUIs inherit the host audio options. Independent applications retain their own explicit audio choices via QSettings. Templates leave opt-in under user control. The supplied hover_button.mp3 has a predecoded hover_button.wav companion, preferred for repeated low-latency playback. MP3 remains supported as a fallback or explicit override; compressed cues skip overlapping playback rather than restarting an active decoder.
+
+## Creative experience and element starters
+
+The **GUI / Creative** gallery includes constellation, particle, wave, orbital, cellular-life, mandala, digital-rain and terrain experiments, plus a focus garden, branching story studio, idea board and palette laboratory. Simulations have motion controls; visual experiments support PNG export. These use the shared `creative_gallery` components.
+
+The **GUI / Element** gallery adds searchable lists, context actions, drag-and-drop lists, validated forms, property tables, expandable inspectors, cancellable progress, tabs, clipboard swatches, split previews, sortable records and command palettes.
+
+Additional boilerplates demonstrate an event bus, undo/redo history, deterministic world generation, a plugin registry, state machines and atomic document saves. Templates remain editable Python and do not execute when inserted.

@@ -12,7 +12,19 @@ python -m venv .venv
 .\.venv\Scripts\python.exe orchestration-menu.py
 ```
 
-The application creates a local orchestration_data workspace on first use. Personal databases, execution history, generated executables and caches are excluded from Git. Existing projects and plugins in your original Systematic folder have not been moved or deleted. A clean checkout starts its own workspace. Set PYLERIUM_HOME explicitly when you want to use an existing workspace.
+The application creates a local `orchestration_data/` workspace on first use. Personal databases, project execution history, virtual environments, caches and generated executables are excluded from Git. Set `PYLERIUM_HOME` to select another workspace.
+
+## Project execution loadouts
+
+Click a project in **Arsenal** to configure its execution loadout. Primary opens the entry point and named argument attachments; use **Open Editor** to edit code and **Run Project** to execute it. Configure companion scripts, environment files, diagnostics, output reports, policies and pipeline overrides per project.
+
+**Run Project does not build an executable.** Packaging is an explicit action in **Workshop → Build EXE**. Legacy C4/PyInstaller output hooks are disabled automatically.
+
+Right-click an Arsenal project for loadout, editor, run, rename, duplicate, folder and asset actions. Assign an image or static 3D model to each execution card. The Assets studio provides model inspection, material overrides, rotation controls and removable assignments.
+
+## Build something creative
+
+Workshop and Plugin Builder include 12 creative experiences, 12 reusable UI elements and 6 additional boilerplates. Explore constellation networks, particles, waves, an orbital observatory, cellular life, mandalas, digital rain, terrain, a focus garden, branching stories, an idea board and color palettes. Templates are editable starting points; creating or inserting one does not enable a plugin automatically.
 
 ## Build a Windows executable
 
@@ -25,7 +37,7 @@ The icon picker appears when running the builder directly. Workshop also provide
 
 ## Guides
 
-[Operations](OPERATIONS.md) · [Workshop](WORKSHOP.md) · [Plugins](PLUGINS.md) · [Executable builds](BUILD.md)
+[Operations](OPERATIONS.md) · [Workshop](WORKSHOP.md) · [Plugins](PLUGINS.md) · [Executable builds](BUILD.md) · [Starter gallery](STARTER_TOOLS.md)
 
 ## Checks
 

@@ -18,7 +18,7 @@ from PyQt6.QtNetwork import QNetworkAccessManager, QNetworkReply, QNetworkReques
 from PyQt6.QtWidgets import (
     QCheckBox, QComboBox, QFileDialog, QFormLayout, QFrame, QGridLayout,
     QHBoxLayout, QInputDialog, QLabel, QLineEdit, QListWidget, QMainWindow,
-    QMessageBox, QPlainTextEdit, QPushButton, QScrollArea, QSpinBox,
+    QMessageBox, QMenu, QPlainTextEdit, QPushButton, QScrollArea, QSpinBox,
     QSplitter, QStackedWidget, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget,QTabWidget,
 )
 
@@ -592,6 +592,14 @@ class OrchestrationWindow(QMainWindow):
         self.asset_name.currentTextChanged.connect(self.inspect_asset)
         layout.addWidget(label('Choose a project or existing item — assignments follow the project even after renaming'))
         layout.addWidget(self.asset_name)
+        self.asset_search=QLineEdit();self.asset_search.setPlaceholderText('Find project, loadout slot or library asset…')
+        self.asset_search.textChanged.connect(self.filter_asset_targets);layout.addWidget(self.asset_search)
+        self.asset_rotation=QLineEdit('[0, 0, 0]');self.asset_rotation.setPlaceholderText('Model rotation [X, Y, Z] degrees')
+        rotation_row=QHBoxLayout();rotation_row.addWidget(self.asset_rotation);rotation_row.addWidget(button('APPLY ROTATION',self.save_asset_rotation));layout.addLayout(rotation_row)
+        clear_row=QHBoxLayout()
+        for title,kind in [('REMOVE IMAGE','icon'),('REMOVE MODEL','model'),('REMOVE TEXTURE','texture')]:
+            clear_row.addWidget(button(title,lambda checked=False,k=kind:self.clear_asset(kind=k)))
+        layout.addLayout(clear_row)
         layout.addWidget(button('ASSIGN IMAGE ICON',lambda:self.assign_asset('icon')))
         layout.addWidget(button('ASSIGN 3D MODEL',lambda:self.assign_asset('model')))
         layout.addWidget(button('OVERRIDE MODEL TEXTURE',lambda:self.assign_asset('texture')))
@@ -611,7 +619,19 @@ class OrchestrationWindow(QMainWindow):
         self.asset_manifest.setReadOnly(True)
         layout.addWidget(self.asset_manifest,1)
         layout.addWidget(label('Keep the OBJ, its referenced .mtl files, and texture folders together when importing. Materials and base-color maps are assigned automatically. If a texture is missing, use Override Model Texture. Images fit without stretching; backgrounds fill their area beneath the original gradient overlays. Reload after changing source assets.',13,'#9aabb4'))
-        root.addWidget(pane,1)
+        from model_preview import InteractiveModelCanvas
+        self.asset_canvas=InteractiveModelCanvas();self.asset_canvas.paused=True
+        artwork,art_layout=panel();art_layout.addWidget(label('ASSET STUDIO // LIVE MATERIAL PREVIEW',18))
+        art_layout.addWidget(self.asset_canvas,1)
+        art_layout.addWidget(button('RESET / FIT MODEL',self.asset_canvas.reset_view))
+        art_layout.addWidget(label('Drag to inspect • Scroll to zoom • Right-click for rendering and export options',11,'#869ba6'))
+        row=QHBoxLayout();row.addWidget(pane,2);row.addWidget(artwork,3);root.addLayout(row,1)
+
+    def filter_asset_targets(self,text):
+        model=self.asset_name.model()
+        for index in range(self.asset_name.count()):
+            item=model.item(index)
+            if item:item.setEnabled(text.casefold() in self.asset_name.itemText(index).casefold())
 
     def build_settings(self):
         from settings_deck import SettingsDeck
@@ -704,7 +724,9 @@ class OrchestrationWindow(QMainWindow):
             card = self.theme.LoadoutCard(data,'primary')
             card.setMinimumSize(260,180)
             card.setMaximumHeight(220)
-            card.clicked.connect(lambda ignored, ident=project['id']:self.open_project(ident))
+            card.clicked.connect(lambda ignored, ident=project['id']:self.open_project_loadout(ident))
+            card.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+            card.customContextMenuRequested.connect(lambda pos,c=card,ident=project['id']:self.project_context_menu(ident,c.mapToGlobal(pos)))
             self.project_grid.addWidget(card,i//3,i%3)
         self.reload_assets()
         if hasattr(self,'plugin_host'):
@@ -741,6 +763,76 @@ class OrchestrationWindow(QMainWindow):
             self.code.setPlainText(code)
             self.code.document().setModified(False)
         self.safe(action)
+
+    def project_context_menu(self, ident, position):
+        menu=QMenu(self)
+        menu.addAction('Execution loadout',lambda:self.open_project_loadout(ident))
+        menu.addAction('Edit in Workshop',lambda:self.open_project(ident))
+        menu.addAction('Run project',lambda:self.safe(lambda:self.launch(ident,self.lobby_profile.currentData() or 'default')))
+        assets=menu.addMenu('Assign assets')
+        assets.addAction('Project / primary artwork',lambda:self.manage_project_assets(ident))
+        for slot,title in [('secondary_target','Secondary'),('context','Environment'),('tactical_hook','Tactical'),('lethal_hook','Output'),('perk1','Perk 1'),('perk2','Perk 2'),('perk3','Perk 3'),('specialty','Specialty'),('wildcard','Wildcard')]:
+            assets.addAction(title,lambda checked=False,k=slot:self.manage_project_assets(ident,k))
+        menu.addSeparator()
+        menu.addAction('Rename project…',lambda:self.rename_arsenal_project(ident))
+        menu.addAction('Duplicate project',lambda:self.safe(lambda:self.duplicate_arsenal_project(ident)))
+        menu.addAction('Open project folder',lambda:__import__('PyQt6.QtGui',fromlist=['QDesktopServices']).QDesktopServices.openUrl(QUrl.fromLocalFile(self.store.get('project',ident)['cwd'])))
+        menu.addAction('Copy script path',lambda:__import__('PyQt6.QtWidgets',fromlist=['QApplication']).QApplication.clipboard().setText(self.store.get('project',ident)['script']))
+        menu.addAction('Export workspace bundle…',self.export_bundle)
+        menu.exec(position)
+
+    def rename_arsenal_project(self,ident):
+        project=self.store.get('project',ident)
+        name,ok=QInputDialog.getText(self,'Rename project','Project name',text=project['name'])
+        if ok and name.strip():
+            project['name']=name.strip();self.store.put('project',ident,project);self.refresh_lists()
+            if self.current_project==ident:self.project_name.setText(name.strip())
+
+    def duplicate_arsenal_project(self,ident):
+        project=self.store.get('project',ident)
+        code=Path(project['script']).read_text(encoding='utf-8')
+        self.create_project(project['name']+' copy',code,interactive=project.get('interactive',False))
+        duplicate=self.store.get('project',self.current_project)
+        duplicate['args']=project.get('args',[]);self.store.put('project',duplicate['id'],duplicate)
+        loadout=self.store.get('project_loadout',ident)
+        if loadout:
+            loadout['loadout_id']=duplicate['id'];loadout['primary_target']['script']=duplicate['script']
+            self.store.put('project_loadout',duplicate['id'],loadout)
+        data=json.loads(json.dumps(ASSETS.manifest))
+        for key,value in list(data.get('items',{}).items()):
+            if key=='project:'+ident or key.startswith('loadout:'+ident+':'):
+                data['items'][key.replace(ident,duplicate['id'],1)]=value
+        ASSETS.save_manifest(data);self.refresh_lists()
+
+    def manage_project_assets(self,ident,slot='primary_target',navigate=True):
+        key='project:'+ident if slot=='primary_target' else 'loadout:'+ident+':'+slot
+        self.reload_assets()
+        index=self.asset_name.findData(key)
+        if index>=0:self.asset_name.setCurrentIndex(index)
+        if navigate:self.navigate('ASSETS')
+
+    def clear_asset(self,key=None,kind=None):
+        key=key or self.asset_name.currentData()
+        data=json.loads(json.dumps(ASSETS.manifest))
+        if kind:data.setdefault('items',{}).get(key,{}).pop(kind,None)
+        else:data.setdefault('items',{}).pop(key,None)
+        ASSETS.save_manifest(data);self.reload_assets()
+
+    def save_asset_rotation(self):
+        def action():
+            rotation=json.loads(self.asset_rotation.text())
+            ASSETS.set_item(self.asset_name.currentData(),rotation=rotation)
+            self.reload_assets()
+        self.safe(action)
+
+    def open_project_loadout(self, ident):
+        from project_loadout_ui import ProjectLoadoutScreen
+        if not hasattr(self, 'project_loadout_screen'):
+            self.project_loadout_screen = ProjectLoadoutScreen(self)
+            self.stack.addWidget(self.project_loadout_screen)
+        self.project_loadout_screen.load(self.store.get('project', ident))
+        self.navigate('ARSENAL')
+        self.stack.setCurrentWidget(self.project_loadout_screen)
 
     def open_project(self, ident):
         index = next(i for i,d in enumerate(self.projects) if d['id']==ident)
@@ -1249,6 +1341,10 @@ class OrchestrationWindow(QMainWindow):
             return
         name = self.asset_name.currentData()
         if name is None:return
+        if hasattr(self,'asset_canvas'):
+            item=self.theme.LoadoutItem(self.asset_name.currentText(),'ASSET STUDIO')
+            item.asset_key=name;self.asset_canvas.set_item(item);self.asset_canvas.paused=True
+        self.asset_rotation.setText(json.dumps(ASSETS.entry(name).get('rotation',[0,0,0])))
         self.asset_image.setPixmap(ASSETS.icon(name,QSize(300,140),self.devicePixelRatioF()).pixmap(QSize(300,140)))
         if ASSETS.entry(name).get('model'):
             self.asset_feedback.setText('Inspecting model materials and textures…')
@@ -1288,15 +1384,19 @@ class OrchestrationWindow(QMainWindow):
             self.asset_name.blockSignals(True)
             self.asset_name.clear()
             for project in self.projects:
-                self.asset_name.addItem(project['name']+' // '+project['id'][:6],'project:'+project['id'])
+                self.asset_name.addItem(project['name']+' // Primary','project:'+project['id'])
+                for slot,title in [('secondary_target','Secondary'),('context','Environment'),('tactical_hook','Tactical'),('lethal_hook','Output'),('perk1','Perk 1'),('perk2','Perk 2'),('perk3','Perk 3'),('specialty','Specialty'),('wildcard','Wildcard')]:
+                    self.asset_name.addItem(project['name']+' // '+title,'loadout:'+project['id']+':'+slot)
             project_names={p['name'] for p in self.projects}
             for name in sorted(ASSETS.manifest.get('items',{})):
-                if not name.startswith('project:') and name not in project_names:
+                if not name.startswith(('project:','loadout:')) and name not in project_names:
                     self.asset_name.addItem(name,name)
             index=self.asset_name.findData(previous)
             if index>=0:self.asset_name.setCurrentIndex(index)
             self.asset_name.blockSignals(False)
             self.inspect_asset()
+        if hasattr(self,'project_loadout_screen') and self.project_loadout_screen.project:
+            self.project_loadout_screen.refresh()
         self.notice('ASSETS RELOADED'+(' // '+'; '.join(ASSETS.errors) if ASSETS.errors else ''))
 
     def save_settings(self):
@@ -1633,6 +1733,11 @@ class OrchestrationWindow(QMainWindow):
                 event.ignore()
                 return
         self._closing = True
+        from model_preview import InteractiveModelCanvas
+        for canvas in self.findChildren(InteractiveModelCanvas):
+            canvas.shutdown_renderer()
+        # Drain asset workers while Qt and their signal receivers still exist.
+        ASSETS.pool.waitForDone()
         self.killchain.shutdown()
         if self.ai_reply:
             self.ai_reply.abort()

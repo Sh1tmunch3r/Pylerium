@@ -256,3 +256,9 @@ python -m unittest discover -s . -p "test_*.py" -v
 ```
 
 The API implementation is [plugin_system.py](plugin_system.py); child command loading is [workspace_plugins.py](workspace_plugins.py); the editor builder is [plugin_builder.py](plugin_builder.py).
+
+## Creative experience plugin templates
+
+Plugin Builder now includes 12 **Experience / …** templates: Constellation playground, Particle reactor, Wave synthesizer, Orbital observatory, Cellular life lab, Generative mandala, Digital rain, Terrain hologram, Focus garden, Branching story studio, Idea constellation board and Palette laboratory.
+
+Each template adds an interactive page through `ctx.add_page()` and an equivalent Workshop starter through `ctx.add_template()`. Use **New**, choose a template, edit it, validate, save and explicitly enable it. These demonstrate creative applications alongside the existing tool-oriented templates. Implementation: [creative_gallery.py](creative_gallery.py) and [creative_templates.py](creative_templates.py).

@@ -99,7 +99,8 @@ def build_project(project, output, name, *, windowed=True, assets=None, plugins=
     command.extend(['--add-data',str(Path(PyQt6.__file__))+':PyQt6'])
     for path in source.glob('*.py'):
         if path.name.startswith('test_') or path.name in ('desktop_entry.py','loadout-menu.py','visual-ref.py','orchestration-menu.py'):continue
-        command.extend(['--add-data',str(path)+':sdk','--hidden-import',path.stem])
+        command.extend(['--add-data',str(path)+':sdk'])
+        if path.stem.isidentifier():command.extend(['--hidden-import',path.stem])
     for path in snapshot.rglob('*.py'):
         relative=path.relative_to(snapshot).with_suffix('')
         if all(part.isidentifier() for part in relative.parts):
