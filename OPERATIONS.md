@@ -68,6 +68,7 @@ ASSETS.set_background(background, opacity=0.6)
   <img width="1896" height="1062" alt="image" src="https://github.com/user-attachments/assets/f3afedee-2d73-4b74-b4bd-86a8221295c0" />
 - **Arsenal:** open a project execution loadout, import a Python entry script, or export/import bundles. Right-click projects for editor/run actions, renaming, duplication, opening the project folder, copying its path and assigning artwork to individual slots.
   <img width="1904" height="1069" alt="image" src="https://github.com/user-attachments/assets/1ebdab4c-a076-48d9-9958-30944d361648" />
+  <img width="1904" height="1059" alt="image" src="https://github.com/user-attachments/assets/9e2db947-0ec9-4cb9-9067-54d4c36f61d9" />
 - **Workshop:** create tools from templates, edit highlighted Python with line numbers and automatic indentation, set JSON arguments and working directories, save, and run. Imported scripts are copied; adjacent modules/resources are not copied automatically. Use a working directory containing required resources and imports.
   <img width="1911" height="1069" alt="image" src="https://github.com/user-attachments/assets/0b38223f-121e-4a98-96fd-54e50e50715a" />
 - **Console:** render ANSI colors, tables, gradients, and cursor-based progress output. Select an isolated run or a grouped view of all runs, freeze the display, customize fonts/output themes/styles, stop selected jobs, and export readable output.
