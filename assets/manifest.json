@@ -1,4 +1,31 @@
 {
   "background_opacity": 0.55,
-  "logo": "icons/ce06410a-pixil-frame-0 (12).png"
+  "logo": "icons/ce06410a-pixil-frame-0 (12).png",
+  "items": {
+    "project:40e1e1262ff2": {
+      "texture_mode": "override",
+      "model": "models/87b912a1-MP5K/MP5K.obj",
+      "texture": "textures/fa86713c-7edc6f15-Tex_0004_1.png",
+      "icon": "icons/1075c663-mp5-preview.png"
+    },
+    "project:hello": {
+      "texture_mode": "automatic",
+      "model": "models/e8f1f193-low-poly_axe__mobile-optimized_3d_game_asset/low-poly_axe__mobile-optimized_3d_game_asset.glb",
+      "icon": "icons/d0331e16-axe-preview.png"
+    },
+    "project:3e0849cb982e": {
+      "texture_mode": "automatic",
+      "model": "models/e58cb08f-baseball_bat/baseball_bat.glb",
+      "icon": "icons/7ef58c15-bat-preview.png"
+    },
+    "loadout:3e0849cb982e:tactical_hook": {
+      "texture_mode": "automatic",
+      "model": "models/b50b4b92-flipper_zero/flipper_zero.glb",
+      "rotation": [
+        0,
+        50,
+        0
+      ]
+    }
+  }
 }
