@@ -1,0 +1,7 @@
+{
+  "id": "starter_sqlite_explorer",
+  "name": "SQLite Explorer / Starter Tools",
+  "description": "Read-only queries, table schemas and bounded result previews.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

@@ -1,7 +1,7 @@
 {
   "id": "new_extension",
-  "name": "Project Launcher",
-  "description": "Project launcher",
+  "name": "New extension",
+  "description": "Experience / Terrain hologram",
   "api_version": 1,
   "entry": "plugin.py"
 }

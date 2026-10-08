@@ -1,0 +1,7 @@
+{
+  "id": "starter_python_inspector",
+  "name": "Python Inspector / Starter Tools",
+  "description": "Inspect syntax, imports, functions, classes and complexity indicators.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

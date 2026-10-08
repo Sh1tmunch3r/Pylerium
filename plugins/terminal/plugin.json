@@ -1,0 +1,7 @@
+{
+  "id": "terminal",
+  "name": "Marquee",
+  "description": "Terminal / Event marquee",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

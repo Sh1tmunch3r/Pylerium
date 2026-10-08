@@ -1,0 +1,7 @@
+{
+  "id": "starter_run_observatory",
+  "name": "Run Observatory",
+  "description": "Host-integrated run observatory",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

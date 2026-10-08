@@ -1,0 +1,7 @@
+{
+  "id": "starter_regex_lab",
+  "name": "Regex Lab / Starter Tools",
+  "description": "Search text with capture groups and match locations.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

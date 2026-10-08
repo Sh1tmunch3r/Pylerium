@@ -18,7 +18,7 @@ def resolve_shortcut(lnk_path):
     or native PowerShell fallback. Returns (target_path, is_directory, is_url).
     """
     lnk_str = str(lnk_path)
-    
+
     # Internet Shortcuts (.url) used by Steam, Epic, etc.
     if lnk_str.lower().endswith(".url"):
         try:
@@ -125,14 +125,14 @@ def get_recent_items(limit=15, category_filter="ALL", cancel=None, min_mtime=0, 
         if mtime < min_mtime:
             break
         raw_name = shortcut.stem
-        
+
         # Exclude internal Windows system noise
         if raw_name.lower() in {'desktop.ini', 'automaticdestinations', 'customdestinations'}:
             continue
 
         try:
             target_path, is_dir, is_url = resolve_shortcut(shortcut)
-            
+
             # Determine extension from target or original name
             ext = Path(target_path).suffix.lower() if not is_url else ''
             if not ext and not is_dir:

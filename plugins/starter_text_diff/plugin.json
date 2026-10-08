@@ -1,0 +1,7 @@
+{
+  "id": "starter_text_diff",
+  "name": "Text Diff / Starter Tools",
+  "description": "Unified line diff between two versions.",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

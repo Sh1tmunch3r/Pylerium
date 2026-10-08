@@ -1,0 +1,7 @@
+{
+  "id": "automota",
+  "name": "Celluar Automota",
+  "description": "Experience / Cellular life lab",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

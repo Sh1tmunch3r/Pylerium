@@ -1,0 +1,7 @@
+{
+  "id": "starter_workspace_inspector",
+  "name": "Workspace Inspector",
+  "description": "Host-integrated workspace inspector",
+  "api_version": 1,
+  "entry": "plugin.py"
+}

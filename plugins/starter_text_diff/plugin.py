@@ -1,7 +1,7 @@
 from toolkit_core import execute
 
 def analyze(text, option=""):
-    return execute('json_lab', text, option)
+    return execute('text_diff', text, option)
 
 SCRIPT_COMMANDS = {"analyze": analyze}
 _page = None
@@ -9,7 +9,7 @@ _page = None
 def register(ctx):
     global _page
     from toolkit_ui import register_tool
-    _page = register_tool(ctx, 'json_lab')
+    _page = register_tool(ctx, 'text_diff')
 
 def unregister(ctx):
     global _page
