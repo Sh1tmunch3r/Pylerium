@@ -35,7 +35,7 @@ Workshop and Plugin Builder include 12 creative experiences, 12 reusable UI elem
 
 The icon picker appears when running the builder directly. Workshop also provides a configurable executable builder. Build output stays local in dist/ and build/.
 
-## Guides
+## Guides & Previews
 
 [Operations](OPERATIONS.md) · [Workshop](WORKSHOP.md) · [Plugins](PLUGINS.md) · [Executable builds](BUILD.md) · [Starter gallery](STARTER_TOOLS.md)
 
