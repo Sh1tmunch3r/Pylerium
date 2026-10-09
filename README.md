@@ -1,4 +1,5 @@
-# <img width="1024" height="559" alt="Q-Photoroom" src="https://github.com/user-attachments/assets/dde7de2b-7b92-4692-b403-dc0fea41e9da" /> <img width="179" height="48" alt="image" src="https://github.com/user-attachments/assets/f0c94d2f-c4b5-4965-9a97-c59fd7672dc4" />
+# <img width="1024" height="559" alt="Q-Photoroom" src="https://github.com/user-attachments/assets/dde7de2b-7b92-4692-b403-dc0fea41e9da" /> <img width="179" height="48" alt="image" src="https://github.com/user-attachments/assets/f0c94d2f-c4b5-4965-9a97-c59fd7672dc4" /><img width="179" height="48" alt="image" src="https://github.com/user-attachments/assets/55b3f65a-1c05-4d71-a44a-85e52718a8c3" />
+
 
 Disclaimer: Pylerium is an original open-source developer workbench bringing the aesthetic of Call of Duty UI. It contains no proprietary game assets, extracted code, or trademarked material from Activision, Treyarch, or the Call of Duty franchise.
 A local Python workspace for projects, plugins, reusable GUI components, model inspection, process orchestration and searchable activity history.
