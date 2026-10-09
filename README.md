@@ -5,6 +5,8 @@ Disclaimer: Pylerium is an original open-source developer workbench bringing the
 A local Python workspace for projects, plugins, reusable GUI components, model inspection, process orchestration and searchable activity history.
 <img width="1049" height="1800" alt="image" src="https://github.com/user-attachments/assets/f6b7e46b-3fcd-49fa-a7c0-ef0f710ce637" />
 
+https://github.com/user-attachments/assets/b1c44548-78c7-47f6-9536-66ea3fec0552
+
 ## Run from source (Windows)
 
 Python 3.10 or newer is required; Python 3.13 is recommended for the Windows executable builder.
