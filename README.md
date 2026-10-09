@@ -1,4 +1,6 @@
-# <img width="1024" height="559" alt="Q-Photoroom" src="https://github.com/user-attachments/assets/dde7de2b-7b92-4692-b403-dc0fea41e9da" /> <img width="356" height="87" alt="image" src="https://github.com/user-attachments/assets/c1e0f360-5276-4965-b19d-7bec10166688" />
+# <img width="1024" height="559" alt="Q-Photoroom" src="https://github.com/user-attachments/assets/dde7de2b-7b92-4692-b403-dc0fea41e9da" /> <img width="226" height="56" alt="Recording 2026-10-10 004025" src="https://github.com/user-attachments/assets/1beba572-639f-4d93-9110-ce6865cfa77e" />
+
+
 
 
 
