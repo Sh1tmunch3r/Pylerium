@@ -3,7 +3,6 @@
 
 Disclaimer: Pylerium is an original open-source developer workbench bringing the aesthetic of Call of Duty UI. It contains no proprietary game assets, extracted code, or trademarked material from Activision, Treyarch, or the Call of Duty franchise.
 A local Python workspace for projects, plugins, reusable GUI components, model inspection, process orchestration and searchable activity history.
-<img width="1049" height="1800" alt="image" src="https://github.com/user-attachments/assets/f6b7e46b-3fcd-49fa-a7c0-ef0f710ce637" />
 
 https://github.com/user-attachments/assets/b1c44548-78c7-47f6-9536-66ea3fec0552
 
@@ -41,6 +40,7 @@ Workshop and Plugin Builder include 12 creative experiences, 12 reusable UI elem
 The icon picker appears when running the builder directly. Workshop also provides a configurable executable builder. Build output stays local in dist/ and build/.
 
 ## Guides & Previews
+<img width="1049" height="1800" alt="image" src="https://github.com/user-attachments/assets/f6b7e46b-3fcd-49fa-a7c0-ef0f710ce637" />
 
 [Operations](OPERATIONS.md) · [Workshop](WORKSHOP.md) · [Plugins](PLUGINS.md) · [Executable builds](BUILD.md) · [Starter gallery](STARTER_TOOLS.md)
 
