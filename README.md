@@ -1,4 +1,5 @@
-# <img width="1024" height="559" alt="Q-Photoroom" src="https://github.com/user-attachments/assets/dde7de2b-7b92-4692-b403-dc0fea41e9da" /> <img width="197" height="101" alt="image" src="https://github.com/user-attachments/assets/95265154-5c2b-415e-8c44-e3380c3f6cf1" />
+# <img width="1024" height="559" alt="Q-Photoroom" src="https://github.com/user-attachments/assets/dde7de2b-7b92-4692-b403-dc0fea41e9da" /> <img width="356" height="87" alt="image" src="https://github.com/user-attachments/assets/c1e0f360-5276-4965-b19d-7bec10166688" />
+
 
 
 
