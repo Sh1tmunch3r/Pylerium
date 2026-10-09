@@ -1,8 +1,6 @@
 # <img width="1024" height="559" alt="Q-Photoroom" src="https://github.com/user-attachments/assets/dde7de2b-7b92-4692-b403-dc0fea41e9da" /> <img width="226" height="56" alt="Recording 2026-10-10 004025" src="https://github.com/user-attachments/assets/1beba572-639f-4d93-9110-ce6865cfa77e" />
 
 
-
-
 Disclaimer: Pylerium is an original open-source developer workbench bringing the aesthetic of Call of Duty UI. It contains no proprietary game assets, extracted code, or trademarked material from Activision, Treyarch, or the Call of Duty franchise.
 A local Python workspace for projects, plugins, reusable GUI components, model inspection, process orchestration and searchable activity history.
 <img width="1049" height="1800" alt="image" src="https://github.com/user-attachments/assets/f6b7e46b-3fcd-49fa-a7c0-ef0f710ce637" />
